@@ -29,7 +29,7 @@ class _AssessmentPageState extends State<AssessmentPage> {
   List<List<String>> _options = [];
   List<String> _correctAnswers = [];
   bool _loading = true;
-  bool _hasTakenAssessment = false; // Track if assessment has been taken
+  bool _hasTakenAssessment = false;
 
   @override
   void initState() {
@@ -49,8 +49,7 @@ class _AssessmentPageState extends State<AssessmentPage> {
         _options = results.map<List<String>>((q) {
           List<String> options = List<String>.from(q['incorrect_answers']);
           options.add(q['correct_answer']);
-          options
-              .shuffle(); // Shuffle the options to randomize the position of the correct answer
+          options.shuffle();
           return options;
         }).toList();
         _correctAnswers =
@@ -167,9 +166,8 @@ class _AssessmentPageState extends State<AssessmentPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context); // Close the dialog
-                Navigator.popUntil(context,
-                    (route) => route.isFirst); // Navigate back to home screen
+                Navigator.pop(context);
+                Navigator.popUntil(context, (route) => route.isFirst);
               },
               child: Text('OK'),
             ),

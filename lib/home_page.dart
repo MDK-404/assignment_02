@@ -1,8 +1,9 @@
+//
 import 'package:flutter/material.dart';
 import 'auth.dart';
 import 'assesment_page.dart';
 import 'login.dart';
-import 'signup.dart'; // Import the SignupPage
+import 'signup.dart';
 
 class HomePage extends StatefulWidget {
   final AuthService authService;
@@ -14,13 +15,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<bool> isLoggedInFuture; // Declare Future<bool> variable
+  late Future<bool> isLoggedInFuture;
 
   @override
   void initState() {
     super.initState();
-    isLoggedInFuture =
-        widget.authService.isLoggedIn(); // Initialize Future<bool> variable
+    isLoggedInFuture = widget.authService.isLoggedIn();
+  }
+
+  Future<void> _updateLoginStatus() async {
+    setState(() {
+      isLoggedInFuture = widget.authService.isLoggedIn();
+    });
   }
 
   @override
@@ -28,21 +34,18 @@ class _HomePageState extends State<HomePage> {
     return FutureBuilder<bool>(
       future: isLoggedInFuture,
       builder: (context, snapshot) {
-        bool isLoggedIn =
-            snapshot.data ?? false; // Get boolean value from snapshot
+        bool isLoggedIn = snapshot.data ?? false;
 
         return Scaffold(
           appBar: AppBar(
             title: Text('Assessment App'),
-            backgroundColor: Colors.blue, // Setting app bar color to blue
+            backgroundColor: Colors.blue,
             actions: [
-              // Conditional display of action button based on login status
               if (isLoggedIn)
                 TextButton(
-                  onPressed: () {
-                    widget.authService.logout();
-                    setState(
-                        () {}); // Refresh the state to reflect logout status
+                  onPressed: () async {
+                    await widget.authService.logout();
+                    await _updateLoginStatus(); // Update login status after logout
                   },
                   child: Text(
                     'Logout',
@@ -59,10 +62,7 @@ class _HomePageState extends State<HomePage> {
                             SignupPage(authService: widget.authService),
                       ),
                     );
-                    setState(() {
-                      isLoggedInFuture = widget.authService
-                          .isLoggedIn(); // Update Future<bool> variable
-                    });
+                    await _updateLoginStatus(); // Update login status after signup
                   },
                   child: Text(
                     'Signup',
@@ -84,7 +84,7 @@ class _HomePageState extends State<HomePage> {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.blue, // Setting text color to white
+                backgroundColor: Colors.blue,
               ),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -95,8 +95,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          backgroundColor:
-              Colors.blue.shade50, // Setting background color to light blue
+          backgroundColor: Colors.blue.shade50,
         );
       },
     );

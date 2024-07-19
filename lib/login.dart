@@ -1,3 +1,4 @@
+import 'package:assignment_02/home_page.dart';
 import 'package:flutter/material.dart';
 import 'signup.dart';
 import 'auth.dart';
@@ -73,8 +74,12 @@ class LoginPage extends StatelessWidget {
                     bool loggedIn = await authService.login(email, password);
 
                     if (loggedIn) {
-                      Navigator.pop(context,
-                          true); // Return true to indicate login success
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => HomePage(
+                                  authService:
+                                      authService))); // Return true to indicate login success
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
